@@ -45,14 +45,17 @@ that include CALDERA in the scope.
 - Run this command if on an ARM-based macOS system:
 
   ```bash
-  export DOCKER_DEFAULT_PLATFORM=linux/amd64
+  export ARCH="$(uname -a | awk '{ print $NF }')"
+  if [[ $ARCH == "arm64" ]]; then
+      export DOCKER_DEFAULT_PLATFORM=linux/amd64
+  fi
   ```
 
 - Download the latest caldera-security-tests release from github or run this:
 
   ```bash
-  export OS="$(uname | python3 -c 'print(open(0).read().lower().strip())')"
   export ARCH="$(uname -a | awk '{ print $NF }')"
+  export OS="$(uname | python3 -c 'print(open(0).read().lower().strip())')"
   gh release download -p "*${OS}_${ARCH}.tar.gz"
   tar -xvf *tar.gz
   ```
