@@ -105,19 +105,18 @@ Create vulnerable test environment, run the [first XSS](https://github.com/metar
 and tear the test environment down:
 
 ```bash
-./bin/cst-darwin TestEnv -v
-export OS="$(uname | python3 -c "print(open(0).read().lower().strip())")"
-./bin/"cst-${OS}" StoredXSSUno
-./bin/"cst-${OS}" TestEnv -d
+./caldera-security-tests TestEnv -v
+./caldera-security-tests StoredXSSUno
+./caldera-security-tests TestEnv -d
 ```
 
 Create vulnerable test environment, run the [second XSS](https://github.com/metaredteam/external-disclosures/security/advisories/GHSA-2gjc-v4hv-m4p9),
 and tear the test environment down:
 
 ```bash
-./bin/cst-darwin TestEnv -v
-./bin/"cst-$(uname)" StoredXSSDos
-./bin/"cst-$(uname)" TestEnv -d
+./caldera-security-tests TestEnv -v
+./caldera-security-tests StoredXSSDos
+./caldera-security-tests TestEnv -d
 ```
 
 Create test environment using the most recent commit
@@ -125,10 +124,10 @@ to the default CALDERA branch, try running all attacks,
 and tear the test environment down:
 
 ```bash
-./bin/cst-darwin TestEnv -r
-./bin/"cst-$(uname)" StoredXSSUno
-./bin/"cst-$(uname)" StoredXSSDos
-./bin/"cst-$(uname)" TestEnv -d
+./caldera-security-tests TestEnv -r
+./caldera-security-tests StoredXSSUno
+./caldera-security-tests StoredXSSDos
+./caldera-security-tests TestEnv -d
 ```
 
 Parameters for the tests can be modified
