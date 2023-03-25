@@ -44,10 +44,9 @@ import (
 )
 
 var (
-	// StoredXSSDosCmd runs the XSS vulnerability found after DEF CON 30.
-	StoredXSSDosCmd = &cobra.Command{
-		Use:   "StoredXSSDos",
-		Short: "Stored XSS found in addition to the previously reported one",
+	storedXSSDosCmd = &cobra.Command{
+		Use:   "storedXSSDos",
+		Short: "Second stored XSS found in MITRE Caldera by Jayson Grace from Meta's Purple Team",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println(color.YellowString(
 				"Introducing stored XSS vulnerability #2, please wait..."))
@@ -89,7 +88,7 @@ var (
 )
 
 func init() {
-	rootCmd.AddCommand(StoredXSSDosCmd)
+	rootCmd.AddCommand(storedXSSDosCmd)
 	storedXSSDosSuccess = false
 	introPayload = false
 }
@@ -224,7 +223,7 @@ func storedXSSDosVuln(payload string) error {
 		// Select Tactic from the operation graph dropdown menu
 		chromedp.SendKeys(tacticSelector, "Tactic"),
 		chromedp.Sleep(Wait(2000)),
-		// Trigger the vulnerability
+		// Trigger the exploit
 		chromedp.Evaluate(triggerVulnJS, &res),
 		chromedp.Sleep(Wait(2000)),
 		chromedp.ActionFunc(func(ctx context.Context) error {
@@ -267,7 +266,7 @@ func storedXSSDosVuln(payload string) error {
 		})); err != nil {
 		log.WithError(err).WithFields(log.Fields{
 			"Payload": payload,
-		}).Error("unexpected error while introducing the exploit")
+		}).Error("unexpected error while exploiting the vulnerability")
 		return err
 	}
 
