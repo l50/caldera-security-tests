@@ -106,7 +106,7 @@ and tear the test environment down:
 
 ```bash
 ./caldera-security-tests TestEnv -v
-./caldera-security-tests StoredXSSUno
+./caldera-security-tests storedXSSUno
 ./caldera-security-tests TestEnv -d
 ```
 
@@ -115,7 +115,16 @@ and tear the test environment down:
 
 ```bash
 ./caldera-security-tests TestEnv -v
-./caldera-security-tests StoredXSSDos
+./caldera-security-tests storedXSSDos
+./caldera-security-tests TestEnv -d
+```
+
+Create vulnerable test environment, run the [third XSS](https://github.com/metaredteam/external-disclosures/security/advisories/GHSA-7344-4pg9-qf45),
+and tear the test environment down:
+
+```bash
+./caldera-security-tests TestEnv -v
+./caldera-security-tests storedXSSTres
 ./caldera-security-tests TestEnv -d
 ```
 
@@ -125,8 +134,9 @@ and tear the test environment down:
 
 ```bash
 ./caldera-security-tests TestEnv -r
-./caldera-security-tests StoredXSSUno
-./caldera-security-tests StoredXSSDos
+./caldera-security-tests storedXSSUno
+./caldera-security-tests storedXSSDos
+./caldera-security-tests storedXSSTres
 ./caldera-security-tests TestEnv -d
 ```
 
