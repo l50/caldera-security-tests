@@ -50,7 +50,7 @@ var (
 
 			caldera.URL = viper.GetString("login_url")
 			caldera.RepoPath = viper.GetString("repo_path")
-			caldera.Creds, err = GetRedCreds(caldera.RepoPath)
+			caldera.Creds, err = getRedCreds(caldera.RepoPath)
 			if err != nil {
 				log.WithError(err).Fatalf(
 					"failed to get Caldera credentials: %v", err)
@@ -66,7 +66,7 @@ var (
 
 			caldera.Driver = driver
 
-			caldera, err = Login(caldera)
+			caldera, err = login(caldera)
 			if err != nil {
 				log.WithError(err).Fatal("failed to login to caldera")
 			}
