@@ -68,6 +68,7 @@ func setChromeOptions(headless bool) ChromeDP {
 			chromedp.NoDefaultBrowserCheck,
 			chromedp.NoFirstRun,
 			chromedp.Flag("headless", headless),
+			chromedp.NoSandbox,
 		},
 	}
 
