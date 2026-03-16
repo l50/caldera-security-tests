@@ -52,7 +52,11 @@ jobs:
       #     colima start
 
       - name: Install chrome
+        id: setup-chrome
         uses: browser-actions/setup-chrome@latest
+
+      - name: Set Chrome path
+        run: echo "CHROMEDP_CHROME_PATH=${{ steps.setup-chrome.outputs.chrome-path }}" >> $GITHUB_ENV
 
       - name: Compile binary
         run: go build
@@ -106,7 +110,7 @@ jobs:
         run: |
           gh issue create \
             --title "🐛 Tests failed for ${{ github.sha }}" \
-            --label "kind/bug" \
+            --label "bug" \
             --body "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

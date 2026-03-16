@@ -70,6 +70,10 @@ func setChromeOptions(headless bool) ChromeDP {
 		chromedp.NoSandbox,
 	)
 
+	if chromePath := os.Getenv("CHROMEDP_CHROME_PATH"); chromePath != "" {
+		opts = append(opts, chromedp.ExecPath(chromePath))
+	}
+
 	chromeOpts := ChromeDP{
 		Options: &opts,
 	}
