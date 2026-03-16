@@ -67,10 +67,20 @@ jobs:
 
       - name: Wait until container is running
         run: |
-          while [[ -z "$(curl --silent localhost:8888 | grep 'login.js')" ]]; do
-            pushd ../caldera-latest && docker compose down && docker compose up -d; popd
-            sleep 60
+          timeout=600
+          elapsed=0
+          echo "Waiting up to ${timeout}s for CALDERA to start..."
+          until curl --silent localhost:8888 | grep -q 'login.js'; do
+            if [ "$elapsed" -ge "$timeout" ]; then
+              echo "Timed out waiting for CALDERA container"
+              docker compose -f ../caldera-latest/docker-compose.yml logs
+              exit 1
+            fi
+            sleep 15
+            elapsed=$((elapsed + 15))
+            echo "Still waiting... (${elapsed}s)"
           done
+          echo "CALDERA is up!"
         shell: bash
 
       - name: Run security regression test for first XSS
