@@ -70,7 +70,7 @@ jobs:
           timeout=600
           elapsed=0
           echo "Waiting up to ${timeout}s for CALDERA to start..."
-          until curl --silent localhost:8888 | grep -q 'login.js'; do
+          until curl --silent --fail --output /dev/null localhost:8888; do
             if [ "$elapsed" -ge "$timeout" ]; then
               echo "Timed out waiting for CALDERA container"
               docker compose -f ../caldera-latest/docker-compose.yml logs
