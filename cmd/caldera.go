@@ -62,15 +62,16 @@ func cancelAll(cancels []func()) {
 // setChromeOptions is used to set the chrome
 // parameters required by ChromeDP.
 func setChromeOptions(headless bool) ChromeDP {
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.DisableGPU,
+		chromedp.NoDefaultBrowserCheck,
+		chromedp.NoFirstRun,
+		chromedp.Flag("headless", headless),
+		chromedp.NoSandbox,
+	)
+
 	chromeOpts := ChromeDP{
-		Options: &[]chromedp.ExecAllocatorOption{
-			chromedp.DisableGPU,
-			// chromedp.IgnoreCertErrors,
-			chromedp.NoDefaultBrowserCheck,
-			chromedp.NoFirstRun,
-			chromedp.Flag("headless", headless),
-			chromedp.NoSandbox,
-		},
+		Options: &opts,
 	}
 
 	return chromeOpts
