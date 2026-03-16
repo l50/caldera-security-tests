@@ -91,10 +91,10 @@ func storedXSSUnoVuln(payload string) error {
 	var buf []byte
 
 	// Selectors for chromeDP
-	pageSelector := "#nav-menu > ul:nth-child(2) > li:nth-child(4) > a"
-	createOPSelector := "#select-operation > div:nth-child(3) > button"
+	pageSelector := `a.nav-item[x-on\:click*="operations"]`
+	createOPSelector := `button[x-on\:click="openOperationCreateModal()"]`
 	opNameSelector := "#op-name"
-	startSelector := "#operationsPage > div > div.modal.is-active > div.modal-card > footer > nav > div.level-right > div > button"
+	startSelector := `button[x-on\:click="addOperation()"]`
 
 	imagePath := viper.GetString("image_path")
 
