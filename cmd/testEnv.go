@@ -117,7 +117,7 @@ func createTestEnvVuln() error {
 		}).Error("failed to navigate to the caldera repo")
 	}
 
-	_, err = script.Exec("docker-compose up -d --force-recreate --build").Stdout()
+	_, err = script.Exec("docker compose up -d --force-recreate --build").Stdout()
 	if err != nil {
 		log.WithError(err).Error("failed to deploy Caldera with docker compose")
 		return err
@@ -137,7 +137,7 @@ func createTestEnvRecent() error {
 		return err
 	}
 
-	_, err = script.Exec("docker-compose up -d --force-recreate --build").Stdout()
+	_, err = script.Exec("docker compose up -d --force-recreate --build").Stdout()
 	if err != nil {
 		log.WithError(err).Error("failed to deploy CALDERA with docker compose")
 		return err
@@ -150,7 +150,7 @@ func createTestEnvRecent() error {
 func destroyTestEnv() error {
 	fmt.Println(color.YellowString(
 		"Destroying CALDERA container via docker compose, please wait..."))
-	_, err := script.Exec("docker-compose down -v").Stdout()
+	_, err := script.Exec("docker compose down -v").Stdout()
 	if err != nil {
 		return err
 	}
